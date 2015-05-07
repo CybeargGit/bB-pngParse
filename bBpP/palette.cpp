@@ -7,35 +7,45 @@ palette::palette(paletteType palType)
 	{
 		case NTSC:
 		{
-			palette("ntsc.png");
+			setImage("ntsc.png");
 			break;
 		}
 		case PAL:
 		{
-			palette("pal.png");
+			setImage("pal.png");
 			break;
 		}
 	}
+	setImageLoaded();
 }
 
 palette::palette(std::string palFileName) : image(palFileName)
 {
-	imageLoaded = height == 8 && width == 16;
+	setImageLoaded();
+}
+
+void palette::setImageLoaded()
+{
+	imageLoaded = imageLoaded && height == 8 && width == 16;
 }
 
 palette::~palette() {}
 
 unsigned char palette::findClosestColor(unsigned char r, unsigned char g, unsigned b)
 {
-	unsigned char i, paletteIndex = 0;
+	unsigned char i, colorIndex = 0;
 	unsigned int vectorIndex;
 
 	for (i = 0; i < 128; i++)
 	{
 		vectorIndex = i * 4;
 		if (imageVector[vectorIndex] == r && imageVector[vectorIndex + 1] == g && imageVector[vectorIndex + 2] == b)
-			paletteIndex = i;
+		{
+			colorIndex = i;
+			break;
+		}
 	}
 
-	return paletteIndex;
+	// convert left-to-right index of image to top-to-bottom index of palette
+	return (colorIndex / 16) * 2 + ((colorIndex % 16) * 16);
 }

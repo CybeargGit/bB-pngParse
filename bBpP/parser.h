@@ -1,16 +1,20 @@
+#include <fstream>
+#include "palette.h"
+#include "sprite.h"
+
 #pragma once
 class parser
 {
 public:
-	parser(bool dpcFormatted, bool bBFormat);
+	parser(sprite* spr, palette* pal, bool dpcFormatted, bool bBFormat);
 	~parser();
 
-	void parsePixels(unsigned char * pixelArray, unsigned int length);
-	void parseColors(unsigned char * colorArray, unsigned int length);
-	void printImage(unsigned char * channelArray, unsigned int length);
+	void parseSprite(std::ofstream* fileStream);
 
 private:
 	bool dpc;
 	bool bB;
+	sprite* spr;
+	palette* pal;
 };
 

@@ -1,2 +1,2 @@
 # bB-pngParse
-Convert PNG sprites into batariBasic-compliant data lists.
+Convert PNG sprites into batariBasic-compliant data tables.

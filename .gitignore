@@ -1,0 +1,11 @@
+$ cat .gitignore
+
+bBpP.v12.suo
+ipch/
+Debug/
+Release/
+bBpP/*.png
+bBpP/*.txt
+bBpP/Debug/
+bBpP/Release/
+bBpP/bBpP.vcxproj.user

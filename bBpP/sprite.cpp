@@ -1,10 +1,9 @@
 #include "stdafx.h"
 #include "sprite.h"
 
-
 sprite::sprite(std::string spriteFileName) : image(spriteFileName)
 {
-	imageLoaded = width && width % 8 == 0;
+	imageLoaded = imageLoaded && width && width % 8 == 0;
 }
 
 sprite::~sprite(){}
@@ -25,9 +24,9 @@ unsigned char* sprite::getShape()
 			// iterate through pixels in sprite line
 			for (k = 0; k < 8; k++)
 			{
-				pixelIndex = (i * 36) + (j * width) + (k * 4);
-				if (imageVector[pixelIndex + 3] == 255)
-					byte += 1 << k; // if alpha is full, set pixel's bit to 1
+				pixelIndex = (i * 32) + (j * width * 4) + (k * 4);
+				if (imageVector[pixelIndex + 3] == 255) // if alpha is full, set pixel's bit to 1
+					byte += 1 << 7-k; // 7-k to give bit proper ordering
 			}
 			outputArray[(height * i) + j] = byte;
 		}
@@ -39,7 +38,7 @@ unsigned char* sprite::getShape()
 // return a list of colors for all sprites
 unsigned char* sprite::getColors(palette * spritePalette)
 {
-	unsigned char* outputArray = new unsigned char[height * (width / 8)]{0};
+	unsigned char* outputArray = new unsigned char[height * (width / 8)]();
 	unsigned int i, j, k, pixelIndex;
 	unsigned char r, g, b;
 
@@ -53,7 +52,7 @@ unsigned char* sprite::getColors(palette * spritePalette)
 			// iterate through pixels in sprite line
 			for (k = 0; k < 8; k++)
 			{
-				pixelIndex = (i * 36) + (j * width) + (k * 4);
+				pixelIndex = (i * 32) + (j * width * 4) + (k * 4);
 				if (imageVector[pixelIndex + 3] == 255)
 				{
 					r = imageVector[pixelIndex];

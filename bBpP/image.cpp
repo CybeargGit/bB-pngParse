@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "image.h"
 #include <iostream>
+#include <sstream>
 
 image::image(std::string imgFileName)
 {
@@ -32,7 +33,9 @@ std::string image::toString()
 
 	if (imageLoaded)
 	{
-		returnString = std::string(imageVector.begin(), imageVector.end());
+		std::stringstream returnStream;
+		std::copy(imageVector.begin(), imageVector.end(), std::ostream_iterator<int>(returnStream, " "));
+		returnString = returnStream.str();
 	}
 	else
 		returnString = "Image not loaded.\n";
