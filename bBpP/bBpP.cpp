@@ -29,7 +29,7 @@ int outputToFile(bool dpc, bool bB, paletteType palType, string spriteName, stri
 		selectedPalette = new palette(palName);
 
 	if (outputName == "")
-		outputName = "spriteData.txt";
+		outputName = "output.txt";
 
 	selectedSprite = new sprite(spriteName);
 
@@ -61,19 +61,24 @@ void outputError(int errorCode)
 {
 	switch (errorCode)
 	{
-	case 0:
-		break;
-	case 1:
-		cout << "You must specify a sprite image.\n";
-		break;
 	case 2:
 		cout << "Incorrectly formatted arguments.\n";
+		break;
 	case 3:
 		cout << "Specified output file can't be opened.\n";
+		break;
 	case 4:
 		cout << "Parsing error.\n";
-	case -1:
-		cout << "bBpP.exe -s sprite.png\n";
+		break;
+	case -1: case 1:
+		cout << "bB pngParse - Convert png images into formatted sprite/color data for batariBasic. ";
+		cout << "Palette files must be 8x16 pixels and sprites must have a width divisible by 8.\n\n";
+		cout << "-s \"spritesheet.png\"\tSpecify sprite image (required)\n";
+		cout << "-p \"secam.png\"\t\tSpecify palette image (ignores -P flag)\n";
+		cout << "-o \"spriteData.txt\"\tSpecify output file (output.txt by default)\n";
+		cout << "-P\t\t\tPAL palette (NTSC by default)\n";
+		cout << "-D\t\t\tDPC kernel formatted (standard kernel by default)\n";
+		cout << "-A\t\t\t6502 ASM formatted (bB formatted by default)\n";
 		break;
 	}
 }
@@ -89,7 +94,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	while (i < argc && outputResult == 0)
 	{
 		string currArg = argv[i];
-		cout << currArg << endl;
 		if (currArg.compare("-help") == 0)
 			outputResult = -1;
 		else if (currArg.compare("-s") == 0 || currArg.compare("-p") == 0 || currArg.compare("-o") == 0)
@@ -116,17 +120,16 @@ int _tmain(int argc, _TCHAR* argv[])
 		i++;
 	}
 
-	if (spriteName == "")
+	if (spriteName.compare("") == 0 && outputResult != -1)
 		outputResult = 1;
-	else if (!outputResult)
+	else if (outputResult == 0)
 		outputResult = outputToFile(dpc, bB, palType, spriteName, palName, outputName);
 
 	// Handle error outputs
 	outputError(outputResult);
 
-	cout << dpc << " " << bB << " " << palType << " " << spriteName << " " << palName << " " << outputName << endl;
-
-	system("PAUSE");
+	if (outputResult != 0)
+		system("PAUSE");
 
 	return outputResult;
 }
